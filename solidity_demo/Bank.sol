@@ -1,17 +1,23 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
-contract Bank {
+import "./IBank.sol";
+
+contract Bank is IBank {
     address public admin;
     mapping(address => uint) public balances;
     address[3] public top3;
+
+    event Deposit(address indexed user, uint amount);
+    event Withdraw(address indexed admin, uint amount);
+    event AdminTransferred(address indexed oldAdmin, address indexed newAdmin);
 
     constructor() {
         admin = msg.sender;
     }
 
     modifier onlyAdmin() {
-        require(msg.sender == admin, "only admin");
+        require(msg.sender == admin, "Bank: only admin");
         _;
     }
 
@@ -19,20 +25,25 @@ contract Bank {
         _deposit(msg.sender, msg.value);
     }
 
-    function deposit() external payable virtual {
+    function deposit() external payable virtual override {
         _deposit(msg.sender, msg.value);
     }
 
-    function withdraw() external virtual onlyAdmin {
+    function withdraw() external virtual override onlyAdmin {
         uint amount = address(this).balance;
-        require(amount > 0, "no balance");
+        require(amount > 0, "Bank: no balance");
+
         (bool ok, ) = payable(admin).call{value: amount}("");
-        require(ok, "withdraw failed");
+        require(ok, "Bank: withdraw failed");
+
+        emit Withdraw(admin, amount);
     }
 
-    function transferAdmin(address newAdmin) external onlyAdmin {
-        require(newAdmin != address(0), "zero admin");
+    function transferAdmin(address newAdmin) external override onlyAdmin {
+        require(newAdmin != address(0), "Bank: zero address for new admin");
+        address oldAdmin = admin;
         admin = newAdmin;
+        emit AdminTransferred(oldAdmin, newAdmin);
     }
 
     function getTop3() external view returns (address[3] memory, uint[3] memory) {
@@ -43,10 +54,11 @@ contract Bank {
         return (top3, amounts);
     }
 
-    function _deposit(address user, uint amount) internal {
-        require(amount > 0, "zero deposit");
+    function _deposit(address user, uint amount) internal virtual {
+        require(amount > 0, "Bank: zero deposit");
         balances[user] += amount;
         _updateTop3(user);
+        emit Deposit(user, amount);
     }
 
     function _updateTop3(address user) internal {
