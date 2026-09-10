@@ -10,20 +10,29 @@ contract Bank {
         admin = msg.sender;
     }
 
-    receive() external payable {
-        _deposit(msg.sender, msg.value);
-    }
-
-    function deposit() external payable {
-        _deposit(msg.sender, msg.value);
-    }
-
-    function withdraw() external {
+    modifier onlyAdmin() {
         require(msg.sender == admin, "only admin");
+        _;
+    }
+
+    receive() external payable virtual {
+        _deposit(msg.sender, msg.value);
+    }
+
+    function deposit() external payable virtual {
+        _deposit(msg.sender, msg.value);
+    }
+
+    function withdraw() external virtual onlyAdmin {
         uint amount = address(this).balance;
         require(amount > 0, "no balance");
         (bool ok, ) = payable(admin).call{value: amount}("");
         require(ok, "withdraw failed");
+    }
+
+    function transferAdmin(address newAdmin) external onlyAdmin {
+        require(newAdmin != address(0), "zero admin");
+        admin = newAdmin;
     }
 
     function getTop3() external view returns (address[3] memory, uint[3] memory) {
