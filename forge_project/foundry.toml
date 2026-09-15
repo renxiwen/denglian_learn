@@ -9,6 +9,7 @@ fs_permissions = [
 ]
 
 [rpc_endpoints]
+mainnet = "${MAINNET_RPC_URL}"
 sepolia = "${SEPOLIA_RPC_URL}"
 base-sepolia = "${SEPOLIA_BASE_RPC_URL}"
 polygon = "${POLYGON_RPC_URL}"
