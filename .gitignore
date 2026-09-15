@@ -4,3 +4,23 @@ config.json
 venv/
 __pycache__/
 *.pyc
+
+# forge_project（由内层 .gitignore 迁出，路径锚定到该目录以保持同样效果）
+forge_project/cache/
+forge_project/out/
+forge_project/.github/
+forge_project/.keys/
+forge_project/.vscode/
+forge_project/lib/
+forge_project/.logs/
+forge_project/.ignore/
+
+# Ignores development broadcast logs
+!/forge_project/broadcast
+/forge_project/broadcast/*/31337/
+/forge_project/broadcast/**/dry-run/
+
+forge_project/docs/
+forge_project/.env
+forge_project/.env.*
+!forge_project/.env.example
