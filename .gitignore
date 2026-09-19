@@ -1,5 +1,7 @@
 config.json
 .env
+viem_script/node_modules/
+viem_script/.env
 .venv/
 venv/
 __pycache__/
@@ -24,3 +26,4 @@ forge_project/docs/
 forge_project/.env
 forge_project/.env.*
 !forge_project/.env.example
+forge_project/deployments/

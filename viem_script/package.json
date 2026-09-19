@@ -1,0 +1,17 @@
+{
+  "name": "viem_script",
+  "version": "1.0.0",
+  "description": "viem脚本",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "watch": "node watch.js",
+    "trade": "node trade.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "viem": "^2.37.9"
+  }
+}

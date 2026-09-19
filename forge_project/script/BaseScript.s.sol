@@ -24,6 +24,7 @@ abstract contract BaseScript is Script {
 
         string memory json1 = "key";
         string memory finalJson = vm.serializeAddress(json1, "address", addr);
+        vm.createDir("deployments", true);
         string memory dirPath = string.concat(
             string.concat("deployments/", name),
             "_"
